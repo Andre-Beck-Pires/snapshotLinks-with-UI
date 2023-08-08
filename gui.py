@@ -13,9 +13,9 @@ def get_input():
     
     # Build the command to run the getLinks.py script with the provided arguments
     if(file_name):
-        command = f"py getLinks.py -s {sid} -w {server} -c {cookie} -f true -o {file_name}"
+        command = f"python3 getLinks.py -s {sid} -w {server} -c {cookie} -f true -o {file_name}"
     else:
-        command = f"py getLinks.py -s {sid} -w {server} -c {cookie} -f true"
+        command = f"python3 getLinks.py -s {sid} -w {server} -c {cookie} -f true"
     print(command)
     # Execute the command using subprocess
     try:

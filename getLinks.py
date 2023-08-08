@@ -252,7 +252,7 @@ def main():
     retryQueue = list(dict.fromkeys(retryQueue))
 
     print("\nSuccesfull Links: " + str(len(links)))
-    command = f"py results.py {str(len(links))}"
+    command = f"python3 results.py {str(len(links))}"
     try:
         subprocess.run(command, shell=True, check=True)
         print("Script executed successfully!")
