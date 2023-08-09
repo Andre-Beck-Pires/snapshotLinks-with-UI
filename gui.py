@@ -1,9 +1,13 @@
 from queue import Empty
 import tkinter as tk
 import subprocess
+import sys
+import os
 
 def get_input():
     # Retrieve the text entered in the input fields
+    default_python_command = sys.executable
+    python_filename = os.path.basename(default_python_command)
     sid = sid_entry.get()
     server = server_entry.get()
     cookie = cookie_entry.get()
@@ -13,9 +17,9 @@ def get_input():
     
     # Build the command to run the getLinks.py script with the provided arguments
     if(file_name):
-        command = f"python3 getLinks.py -s {sid} -w {server} -c {cookie} -f true -o {file_name}"
+        command = f"{python_filename} getLinks.py -s {sid} -w {server} -c {cookie} -f true -o {file_name}"
     else:
-        command = f"python3 getLinks.py -s {sid} -w {server} -c {cookie} -f true"
+        command = f"{python_filename} getLinks.py -s {sid} -w {server} -c {cookie} -f true"
     print(command)
     # Execute the command using subprocess
     try:
@@ -40,6 +44,7 @@ domain_label = tk.Label(root, text="Filter by a domain")
 
 
 # Create input fields (Entry widgets)
+
 sid_entry = tk.Entry(root)
 server_entry = tk.Entry(root)
 cookie_entry = tk.Entry(root)

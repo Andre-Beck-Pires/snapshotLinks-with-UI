@@ -7,6 +7,8 @@ import re
 from urllib.request import urlopen, Request
 from urllib.error import URLError, HTTPError
 import subprocess
+import sys
+import os
 
 def getBaseURL(server):
     if server == "nl":
@@ -245,6 +247,9 @@ def main():
     links = []
     retryQueue = []
 
+    default_python_command = sys.executable
+    python_filename = os.path.basename(default_python_command)
+
     url = buildURL(server, snapshot) + str(domain)    
     scrapeLinksL1(url, links, server, snapshot, domain, retryQueue, cookie, filterURL, filterPattern)
 
@@ -252,7 +257,7 @@ def main():
     retryQueue = list(dict.fromkeys(retryQueue))
 
     print("\nSuccesfull Links: " + str(len(links)))
-    command = f"python3 results.py {str(len(links))}"
+    command = f"{python_filename} results.py {str(len(links))}"
     try:
         subprocess.run(command, shell=True, check=True)
         print("Script executed successfully!")
