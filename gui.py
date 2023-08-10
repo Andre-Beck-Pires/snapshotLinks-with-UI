@@ -4,6 +4,14 @@ import subprocess
 import sys
 import os
 
+
+def show_tooltip(event):
+    tooltip_label.place(x=event.x+100, y=event.y+100)
+    tooltip_label.lift()
+    
+def hide_tooltip(event):
+    tooltip_label.place_forget()
+
 def get_input():
     # Retrieve the text entered in the input fields
     default_python_command = sys.executable
@@ -34,6 +42,11 @@ def get_input():
 # Create the main window
 root = tk.Tk()
 root.title("Input Fields")
+root.geometry("500x500")
+
+
+
+
 
 # Create labels
 sid_label = tk.Label(root, text="SID:*")
@@ -41,6 +54,11 @@ server_label = tk.Label(root, text="Server:*")
 cookie_label = tk.Label(root,text="JSESSIONID*")
 file_name_label = tk.Label(root, text="File Name")
 domain_label = tk.Label(root, text="Filter by a domain")
+
+tooltip_label = tk.Label(root, text="You can get it from snapshot link", background="black", relief="solid", font=("Arial", 20))
+
+sid_label.bind("<Enter>", show_tooltip)
+sid_label.bind("<Leave>", hide_tooltip)
 
 
 # Create input fields (Entry widgets)
@@ -54,16 +72,16 @@ domain_entry = tk.Entry(root)
 # Create a button to get input
 submit_button = tk.Button(root, text="Submit", command=get_input)
 # Use grid layout to arrange the widgets
-file_name_label.grid(row=0, column=0, padx=5, pady=5)
-file_name_entry.grid(row=0, column=1, padx=5, pady=5)
-sid_label.grid(row=1, column=0, padx=5, pady=5)
-sid_entry.grid(row=1, column=1, padx=5, pady=5)
-server_label.grid(row=2, column=0, padx=5, pady=5)
-server_entry.grid(row=2, column=1, padx=5, pady=5)
-cookie_label.grid(row=3, column=0, padx=5, pady=5)
-cookie_entry.grid(row=3, column=1, padx=5, pady=5)
-domain_label.grid(row=4, column=0, padx=5, pady=5)
-domain_entry.grid(row=4, column=1, padx=5, pady=5)
+file_name_label.grid(row=0, column=0, padx=20, pady=20)
+file_name_entry.grid(row=0, column=1, padx=20, pady=20)
+sid_label.grid(row=1, column=0, padx=20, pady=20)
+sid_entry.grid(row=1, column=1, padx=20, pady=20)
+server_label.grid(row=2, column=0, padx=20, pady=20)
+server_entry.grid(row=2, column=1, padx=20, pady=20)
+cookie_label.grid(row=3, column=0, padx=20, pady=20)
+cookie_entry.grid(row=3, column=1, padx=20, pady=20)
+domain_label.grid(row=4, column=0, padx=20, pady=20)
+domain_entry.grid(row=4, column=1, padx=20, pady=20)
 submit_button.grid(row=5, column=0, columnspan=2, padx=5, pady=5)
 
 # Start the main event loop
