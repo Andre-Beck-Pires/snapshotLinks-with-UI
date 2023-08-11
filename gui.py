@@ -3,23 +3,49 @@ import tkinter as tk
 import subprocess
 import sys
 import os
+import re
 
-
-def show_tooltip(event):
-    tooltip_label.place(x=event.x+100, y=event.y+100)
-    tooltip_label.lift()
+#tooltip methods
+def show_SID_tooltip(event):
+    tooltip_SID_label.place(x=event.x+100, y=event.y+100)
+    tooltip_SID_label.lift()
     
-def hide_tooltip(event):
-    tooltip_label.place_forget()
+def hide_SID_tooltip(event):
+    tooltip_SID_label.place_forget()
+
+def show_SERVER_tooltip(event):
+    tooltip_SERVER_label.place(x=event.x+100, y=event.y+100)
+    tooltip_SERVER_label.lift()
+    
+def hide_SERVER_tooltip(event):
+    tooltip_SERVER_label.place_forget()
+
+def show_COOKIE_tooltip(event):
+    tooltip_COOKIE_label.place(x=event.x+100, y=event.y+100)
+    tooltip_COOKIE_label.lift()
+    
+def hide_COOKIE_tooltip(event):
+    tooltip_COOKIE_label.place_forget()
+
+
 
 def get_input():
     # Retrieve the text entered in the input fields
     default_python_command = sys.executable
     python_filename = os.path.basename(default_python_command)
-    sid = sid_entry.get()
-    server = server_entry.get()
+
+    snapshotLink = snapshotLink_entry.get()
+
+    sidPattern = r"snapshot=(\d+)"
+    match = re.search(sidPattern, snapshotLink)
+    sid = match.group(1)
+
+    server = snapshotLink[10:12]
+
     cookie = cookie_entry.get()
+
     file_name = file_name_entry.get()
+
     domain = domain_entry.get()
 
     
@@ -49,22 +75,25 @@ root.geometry("500x500")
 
 
 # Create labels
-sid_label = tk.Label(root, text="SID:*")
-server_label = tk.Label(root, text="Server:*")
+snapshotLink_label = tk.Label(root, text="Snaphot URL")
+
 cookie_label = tk.Label(root,text="JSESSIONID*")
 file_name_label = tk.Label(root, text="File Name")
 domain_label = tk.Label(root, text="Filter by a domain")
 
-tooltip_label = tk.Label(root, text="You can get it from snapshot link", background="black", relief="solid", font=("Arial", 20))
+#define tooltips
+tooltip_COOKIE_label = tk.Label(root, text="You can get it using F12 > Cookies", background="black", relief="solid", font=("Arial", 20))
 
-sid_label.bind("<Enter>", show_tooltip)
-sid_label.bind("<Leave>", hide_tooltip)
+#create toltips events
 
 
+
+cookie_label.bind("<Enter>", show_COOKIE_tooltip)
+cookie_label.bind("<Leave>", hide_COOKIE_tooltip)
 # Create input fields (Entry widgets)
 
-sid_entry = tk.Entry(root)
-server_entry = tk.Entry(root)
+snapshotLink_entry = tk.Entry(root)
+
 cookie_entry = tk.Entry(root)
 file_name_entry = tk.Entry(root)
 domain_entry = tk.Entry(root)
@@ -74,15 +103,19 @@ submit_button = tk.Button(root, text="Submit", command=get_input)
 # Use grid layout to arrange the widgets
 file_name_label.grid(row=0, column=0, padx=20, pady=20)
 file_name_entry.grid(row=0, column=1, padx=20, pady=20)
-sid_label.grid(row=1, column=0, padx=20, pady=20)
-sid_entry.grid(row=1, column=1, padx=20, pady=20)
-server_label.grid(row=2, column=0, padx=20, pady=20)
-server_entry.grid(row=2, column=1, padx=20, pady=20)
+
+snapshotLink_label.grid(row=1, column=0, padx=20, pady=20)
+snapshotLink_entry.grid(row=1, column=1, padx=20, pady=20)
+
 cookie_label.grid(row=3, column=0, padx=20, pady=20)
 cookie_entry.grid(row=3, column=1, padx=20, pady=20)
+
 domain_label.grid(row=4, column=0, padx=20, pady=20)
 domain_entry.grid(row=4, column=1, padx=20, pady=20)
-submit_button.grid(row=5, column=0, columnspan=2, padx=5, pady=5)
+
+
+
+submit_button.grid(row=6, column=0, columnspan=2, padx=5, pady=5)
 
 # Start the main event loop
 root.mainloop()
