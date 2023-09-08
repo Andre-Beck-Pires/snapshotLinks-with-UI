@@ -5,20 +5,17 @@ import sys
 import os
 import re
 
-#tooltip methods
-def show_SID_tooltip(event):
-    tooltip_SID_label.place(x=event.x+100, y=event.y+100)
-    tooltip_SID_label.lift()
-    
-def hide_SID_tooltip(event):
-    tooltip_SID_label.place_forget()
+is_NL = False
 
-def show_SERVER_tooltip(event):
-    tooltip_SERVER_label.place(x=event.x+100, y=event.y+100)
-    tooltip_SERVER_label.lift()
-    
-def hide_SERVER_tooltip(event):
-    tooltip_SERVER_label.place_forget()
+
+def checkbox_callback():
+    if checkbox_var.get():
+        checkLabel.config(text="It is on NL server")
+        global is_NL
+        is_NL = True
+    else:
+        checkLabel.config(text="It is not on NL server")
+        is_NL = False
 
 def show_COOKIE_tooltip(event):
     tooltip_COOKIE_label.place(x=event.x+100, y=event.y+100)
@@ -40,15 +37,18 @@ def get_input():
     match = re.search(sidPattern, snapshotLink)
     sid = match.group(1)
 
-    server = snapshotLink[10:12]
+    
 
     cookie = cookie_entry.get()
 
     file_name = file_name_entry.get()
 
     domain = domain_entry.get()
+    if is_NL == True:
+        server = "nl"
+    else:
+        server = snapshotLink[10:12]
 
-    
     # Build the command to run the getLinks.py script with the provided arguments
     if(file_name):
         command = f"{python_filename} getLinks.py -s {sid} -w {server} -c {cookie} -f true -o {file_name}"
@@ -75,11 +75,12 @@ root.geometry("500x500")
 
 
 # Create labels
-snapshotLink_label = tk.Label(root, text="Snaphot URL")
+snapshotLink_label = tk.Label(root, text="Snaphot URL*")
 
 cookie_label = tk.Label(root,text="JSESSIONID*")
 file_name_label = tk.Label(root, text="File Name")
 domain_label = tk.Label(root, text="Filter by a domain")
+checkLabel = tk.Label(root, text="Check if it is on NL server")
 
 #define tooltips
 tooltip_COOKIE_label = tk.Label(root, text="You can get it using F12 > Cookies", background="black", relief="solid", font=("Arial", 20))
@@ -100,6 +101,13 @@ domain_entry = tk.Entry(root)
 
 # Create a button to get input
 submit_button = tk.Button(root, text="Submit", command=get_input)
+
+
+# Create a Checkbutton widget
+checkbox_var = tk.BooleanVar()  # This variable will hold the checkbox state
+checkbox = tk.Checkbutton(root, text="NL Server", variable=checkbox_var, command=checkbox_callback)
+
+
 # Use grid layout to arrange the widgets
 file_name_label.grid(row=0, column=0, padx=20, pady=20)
 file_name_entry.grid(row=0, column=1, padx=20, pady=20)
@@ -113,9 +121,13 @@ cookie_entry.grid(row=3, column=1, padx=20, pady=20)
 domain_label.grid(row=4, column=0, padx=20, pady=20)
 domain_entry.grid(row=4, column=1, padx=20, pady=20)
 
-
+checkLabel.grid(row=7, column=0)
+checkbox.grid(row=7,column=1)
 
 submit_button.grid(row=6, column=0, columnspan=2, padx=5, pady=5)
+
+
+
 
 # Start the main event loop
 root.mainloop()
