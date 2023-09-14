@@ -4,9 +4,22 @@ import subprocess
 import sys
 import os
 import re
+import threading
 
 is_NL = False
 
+def show_panelNoText():
+    panel.place(x=0, y=0, relwidth=1, relheight=1)
+    panel_label.config(text=f"Running pagecount")
+    panel.lift()  # Bring the panel to the front
+
+def show_panel(name):
+    panel.place(x=0, y=0, relwidth=1, relheight=1)
+    panel_label.config(text=f"Running pagecount for {name}")
+    panel.lift()  # Bring the panel to the front
+
+def hide_panel():
+    panel.place_forget()  # Hide the panel
 
 def checkbox_callback():
     if checkbox_var.get():
@@ -27,6 +40,11 @@ def hide_COOKIE_tooltip(event):
 
 
 def get_input():
+    file_name = file_name_entry.get()
+    if(file_name):
+        show_panel(file_name)
+    else:
+        show_panelNoText()
     # Retrieve the text entered in the input fields
     default_python_command = sys.executable
     python_filename = os.path.basename(default_python_command)
@@ -41,7 +59,7 @@ def get_input():
 
     cookie = cookie_entry.get()
 
-    file_name = file_name_entry.get()
+   
 
     domain = domain_entry.get()
     if is_NL == True:
@@ -63,6 +81,8 @@ def get_input():
         print(f"Error: {e}")
     
     # Add any additional actions you want after running the script.
+    
+
 
 # ... (rest of the UI code) ...
 # Create the main window
@@ -71,7 +91,12 @@ root.title("Input Fields")
 root.geometry("500x500")
 
 
-
+# Create a panel (a Frame) with some content
+panel = tk.Frame(root, width=500, height=500, bg="lightgray")
+panel_label = tk.Label(panel, text="Running pagecount for")
+panel_label.pack(pady=10)
+panel_button = tk.Button(panel, text="Hide Panel", command=hide_panel)
+panel_button.pack()
 
 
 # Create labels
@@ -100,7 +125,8 @@ file_name_entry = tk.Entry(root)
 domain_entry = tk.Entry(root)
 
 # Create a button to get input
-submit_button = tk.Button(root, text="Submit", command=get_input)
+submit_button = tk.Button(root, text="Submit", command=lambda: threading.Thread(target=get_input).start())
+
 
 
 # Create a Checkbutton widget
@@ -127,7 +153,7 @@ checkbox.grid(row=7,column=1)
 submit_button.grid(row=6, column=0, columnspan=2, padx=5, pady=5)
 
 
-
+hide_panel()
 
 # Start the main event loop
 root.mainloop()
